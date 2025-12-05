@@ -1,0 +1,85 @@
+### Змінні
+@baseUrl = http://localhost:3000/api/v1
+@email = jobseeker@example.com
+@password = secret123
+
+### 1. Реєстрація шукача роботи
+POST {{baseUrl}}/auth/email/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "firstName": "Jane",
+  "lastName": "JobSeeker"
+}
+
+### 2. Логін шукача роботи
+# @name jobSeekerLogin
+POST {{baseUrl}}/auth/email/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 3. Отримати токен з відповіді
+@jobSeekerToken = {{jobSeekerLogin.response.body.token}}
+@jobSeekerRefreshToken = {{jobSeekerLogin.response.body.refreshToken}}
+
+### 4. Оновити роль на job_seeker (потрібен admin токен або через БД)
+# Це потрібно зробити через БД або admin panel
+# UPDATE "user" SET "roleId" = 4 WHERE email = 'jobseeker@example.com';
+
+### 5. Створити профіль шукача роботи
+POST {{baseUrl}}/job-seekers
+Content-Type: application/json
+Authorization: Bearer {{jobSeekerToken}}
+
+{
+  "bio": "Passionate Software Engineer with 5+ years of experience in full-stack development",
+  "desiredPosition": "Senior Software Developer",
+  "yearsOfExperience": 5,
+  "linkedinUrl": "https://linkedin.com/in/janedoe",
+  "githubUrl": "https://github.com/janedoe"
+}
+
+### 6. Отримати свій профіль шукача роботи
+GET {{baseUrl}}/job-seekers/my-profile
+Authorization: Bearer {{jobSeekerToken}}
+
+### 7. Оновити профіль шукача роботи
+PATCH {{baseUrl}}/job-seekers/1
+Content-Type: application/json
+Authorization: Bearer {{jobSeekerToken}}
+
+{
+  "bio": "Updated bio: Experienced Full-Stack Developer",
+  "yearsOfExperience": 6,
+  "desiredPosition": "Lead Software Engineer"
+}
+
+### 8. Отримати всіх шукачів роботи (з пагінацією)
+GET {{baseUrl}}/job-seekers?page=1&limit=10
+Authorization: Bearer {{jobSeekerToken}}
+
+### 9. Отримати конкретного шукача роботи за ID
+GET {{baseUrl}}/job-seekers/1
+Authorization: Bearer {{jobSeekerToken}}
+
+### 10. Видалити профіль шукача роботи
+DELETE {{baseUrl}}/job-seekers/1
+Authorization: Bearer {{jobSeekerToken}}
+
+### 11. Refresh токен
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{jobSeekerRefreshToken}}"
+}
+
+### 12. Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{jobSeekerToken}}
