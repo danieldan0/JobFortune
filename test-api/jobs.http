@@ -1,0 +1,124 @@
+### Jobs API Tests
+### Make sure to update {{baseUrl}}, {{employerToken}}, and {{jobId}} variables
+
+@baseUrl = http://localhost:3000/api/v1
+@employerToken = YOUR_EMPLOYER_JWT_TOKEN_HERE
+@jobId = 1
+
+### Get all jobs (public, with pagination and filters)
+GET {{baseUrl}}/jobs?page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get all jobs with search filter (search in title, description, requirements)
+GET {{baseUrl}}/jobs?search=developer&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get jobs by location
+GET {{baseUrl}}/jobs?location=Kyiv&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get jobs by employment type
+GET {{baseUrl}}/jobs?employmentType=full-time&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get jobs by work mode
+GET {{baseUrl}}/jobs?workMode=remote&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get only active jobs
+GET {{baseUrl}}/jobs?isActive=true&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get jobs by employer ID
+GET {{baseUrl}}/jobs?employerId=1&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Complex search: Remote full-time developer jobs in Kyiv
+GET {{baseUrl}}/jobs?search=developer&location=Kyiv&employmentType=full-time&workMode=remote&isActive=true&page=1&limit=10
+Content-Type: application/json
+
+###
+
+### Get specific job by ID (public)
+GET {{baseUrl}}/jobs/{{jobId}}
+Content-Type: application/json
+
+###
+
+### Create new job (employer only)
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+Authorization: Bearer {{employerToken}}
+
+{
+  "title": "Senior Backend Developer",
+  "description": "We are looking for an experienced Backend Developer to join our team. You will work on building scalable microservices and APIs.",
+  "requirements": "5+ years of experience with Node.js and TypeScript, experience with NestJS framework, knowledge of PostgreSQL and MongoDB, experience with Docker and Kubernetes",
+  "salaryMin": 3000,
+  "salaryMax": 5000,
+  "salaryCurrency": "USD",
+  "location": "Kyiv",
+  "employmentType": "full-time",
+  "workMode": "remote"
+}
+
+###
+
+### Create internship job
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+Authorization: Bearer {{employerToken}}
+
+{
+  "title": "Frontend Developer Internship",
+  "description": "Internship position for junior developers. Learn React, TypeScript and modern web development practices.",
+  "location": "Lviv",
+  "employmentType": "internship",
+  "workMode": "hybrid"
+}
+
+###
+
+### Update job (employer only, must be job owner or admin)
+PATCH {{baseUrl}}/jobs/{{jobId}}
+Content-Type: application/json
+Authorization: Bearer {{employerToken}}
+
+{
+  "title": "Senior Backend Developer (Updated)",
+  "salaryMin": 3500,
+  "salaryMax": 6000
+}
+
+###
+
+### Deactivate job (employer only, must be job owner or admin)
+PATCH {{baseUrl}}/jobs/{{jobId}}
+Content-Type: application/json
+Authorization: Bearer {{employerToken}}
+
+{
+  "isActive": false
+}
+
+###
+
+### Delete job (employer only, must be job owner or admin)
+DELETE {{baseUrl}}/jobs/{{jobId}}
+Authorization: Bearer {{employerToken}}
+
+###
