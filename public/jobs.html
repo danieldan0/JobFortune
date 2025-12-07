@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вакансії - JobFortune</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header"></div>
+
+    <!-- Jobs Section -->
+    <section class="py-5">
+        <div class="container">
+            <h1 class="mb-4">Доступні вакансії</h1>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Пошук за назвою...">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="locationInput" placeholder="Локація...">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="workModeSelect">
+                                <option value="">Режим роботи</option>
+                                <option value="remote">Віддалена</option>
+                                <option value="on-site">В офісі</option>
+                                <option value="hybrid">Гібридна</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" id="searchBtn">
+                                <i class="bi bi-search"></i> Шукати
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jobs List -->
+            <div id="jobsList" class="row g-4">
+                <!-- Jobs will be loaded here -->
+                <div class="col-12 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Завантаження...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="navigation.js"></script>
+    <script>
+        fetch('header.html').then(r => r.text()).then(html => document.getElementById('header').innerHTML = html);
+
+        // Load jobs
+        async function loadJobs() {
+            const search = document.getElementById('searchInput').value;
+            const location = document.getElementById('locationInput').value;
+            const workMode = document.getElementById('workModeSelect').value;
+
+            let url = '/api/v1/jobs?page=1&limit=50&isActive=true';
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            if (location) url += `&location=${encodeURIComponent(location)}`;
+            if (workMode) url += `&workMode=${workMode}`;
+
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+
+                const jobsList = document.getElementById('jobsList');
+
+                if (!result.data || result.data.length === 0) {
+                    jobsList.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> Вакансій не знайдено
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                jobsList.innerHTML = result.data.map(job => `
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">${job.title}</h5>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-geo-alt"></i> ${job.location || 'Не вказано'}
+                                    ${job.workMode ? `<span class="badge bg-info ms-2">${getWorkModeText(job.workMode)}</span>` : ''}
+                                    ${job.employmentType ? `<span class="badge bg-secondary ms-1">${getEmploymentTypeText(job.employmentType)}</span>` : ''}
+                                </p>
+                                <p class="card-text">${job.description ? job.description.substring(0, 150) + '...' : ''}</p>
+                                ${job.salaryMin || job.salaryMax ? `
+                                    <p class="text-success fw-bold">
+                                        <i class="bi bi-cash"></i> ${formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
+                                    </p>
+                                ` : ''}
+                                <button class="btn btn-primary btn-sm" onclick="viewJob(${job.id})">
+                                    Детальніше <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('jobsList').innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            Помилка завантаження вакансій: ${error.message}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function getWorkModeText(mode) {
+            const modes = {
+                'remote': 'Віддалена',
+                'on-site': 'В офісі',
+                'hybrid': 'Гібридна'
+            };
+            return modes[mode] || mode;
+        }
+
+        function getEmploymentTypeText(type) {
+            const types = {
+                'full-time': 'Повна зайнятість',
+                'part-time': 'Часткова зайнятість',
+                'contract': 'Контракт',
+                'internship': 'Стажування'
+            };
+            return types[type] || type;
+        }
+
+        function formatSalary(min, max, currency) {
+            currency = currency || 'USD';
+            if (min && max) {
+                return `${min} - ${max} ${currency}`;
+            } else if (min) {
+                return `від ${min} ${currency}`;
+            } else if (max) {
+                return `до ${max} ${currency}`;
+            }
+            return '';
+        }
+
+        function viewJob(id) {
+            window.location.href = `job-detail.html?id=${id}`;
+        }
+
+        // Search button handler
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('searchBtn').addEventListener('click', loadJobs);
+
+            // Allow search on Enter key
+            ['searchInput', 'locationInput'].forEach(id => {
+                document.getElementById(id).addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') loadJobs();
+                });
+            });
+
+            // Load jobs on page load
+            loadJobs();
+        });
+    </script>
+</body>
+
+</html>

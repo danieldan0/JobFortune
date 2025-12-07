@@ -4,6 +4,7 @@ import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { EmployersModule } from './employers/employers.module';
 import { JobSeekersModule } from './job-seekers/job-seekers.module';
+import { JobsModule } from './jobs/jobs.module';
 import databaseConfig from './database/config/database.config';
 import authConfig from './auth/config/auth.config';
 import appConfig from './config/app.config';
@@ -96,6 +97,7 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     HomeModule,
     EmployersModule,
     JobSeekersModule,
+    JobsModule,
   ],
 })
 export class AppModule {}

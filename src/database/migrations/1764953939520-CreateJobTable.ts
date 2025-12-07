@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateJobTable1764953939520 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(
-            `CREATE TABLE "job" (
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE TABLE "job" (
         "id" SERIAL NOT NULL,
         "title" character varying NOT NULL,
         "description" text NOT NULL,
@@ -21,26 +21,24 @@ export class CreateJobTable1764953939520 implements MigrationInterface {
         CONSTRAINT "PK_job_id" PRIMARY KEY ("id"),
         CONSTRAINT "FK_job_employerId" FOREIGN KEY ("employerId") REFERENCES "employer"("id") ON DELETE CASCADE ON UPDATE NO ACTION
       )`,
-        );
-        await queryRunner.query(
-            `CREATE INDEX "IDX_job_title" ON "job" ("title")`,
-        );
-        await queryRunner.query(
-            `CREATE INDEX "IDX_job_location" ON "job" ("location")`,
-        );
-        await queryRunner.query(
-            `CREATE INDEX "IDX_job_isActive" ON "job" ("isActive")`,
-        );
-        await queryRunner.query(
-            `CREATE INDEX "IDX_job_employerId" ON "job" ("employerId")`,
-        );
-    }
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_job_title" ON "job" ("title")`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_job_location" ON "job" ("location")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_job_isActive" ON "job" ("isActive")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_job_employerId" ON "job" ("employerId")`,
+    );
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP INDEX "IDX_job_employerId"`);
-        await queryRunner.query(`DROP INDEX "IDX_job_isActive"`);
-        await queryRunner.query(`DROP INDEX "IDX_job_location"`);
-        await queryRunner.query(`DROP INDEX "IDX_job_title"`);
-        await queryRunner.query(`DROP TABLE "job"`);
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DROP INDEX "IDX_job_employerId"`);
+    await queryRunner.query(`DROP INDEX "IDX_job_isActive"`);
+    await queryRunner.query(`DROP INDEX "IDX_job_location"`);
+    await queryRunner.query(`DROP INDEX "IDX_job_title"`);
+    await queryRunner.query(`DROP TABLE "job"`);
+  }
 }

@@ -8,47 +8,47 @@ import { Job } from './domain/job';
 
 @Injectable()
 export class JobsService {
-    constructor(private readonly jobRepository: JobRepository) { }
+  constructor(private readonly jobRepository: JobRepository) {}
 
-    async create(employerId: number, createJobDto: CreateJobDto) {
-        return this.jobRepository.create({
-            ...createJobDto,
-            employerId,
-            isActive: true,
-        } as Job);
-    }
+  async create(employerId: number, createJobDto: CreateJobDto) {
+    return this.jobRepository.create({
+      ...createJobDto,
+      employerId,
+      isActive: true,
+    } as Job);
+  }
 
-    async findManyWithPagination(
-        paginationOptions: IPaginationOptions,
-        filterOptions?: FilterJobDto,
-    ) {
-        return this.jobRepository.findManyWithPagination({
-            paginationOptions,
-            filterOptions,
-        });
-    }
+  async findManyWithPagination(
+    paginationOptions: IPaginationOptions,
+    filterOptions?: FilterJobDto,
+  ) {
+    return this.jobRepository.findManyWithPagination({
+      paginationOptions,
+      filterOptions,
+    });
+  }
 
-    async findById(id: number) {
-        const job = await this.jobRepository.findById(id);
-        if (!job) {
-            throw new NotFoundException('Job not found');
-        }
-        return job;
+  async findById(id: number) {
+    const job = await this.jobRepository.findById(id);
+    if (!job) {
+      throw new NotFoundException('Job not found');
     }
+    return job;
+  }
 
-    async update(id: number, updateJobDto: UpdateJobDto) {
-        const job = await this.jobRepository.findById(id);
-        if (!job) {
-            throw new NotFoundException('Job not found');
-        }
-        return this.jobRepository.update(id, updateJobDto);
+  async update(id: number, updateJobDto: UpdateJobDto) {
+    const job = await this.jobRepository.findById(id);
+    if (!job) {
+      throw new NotFoundException('Job not found');
     }
+    return this.jobRepository.update(id, updateJobDto);
+  }
 
-    async remove(id: number) {
-        const job = await this.jobRepository.findById(id);
-        if (!job) {
-            throw new NotFoundException('Job not found');
-        }
-        return this.jobRepository.remove(id);
+  async remove(id: number) {
+    const job = await this.jobRepository.findById(id);
+    if (!job) {
+      throw new NotFoundException('Job not found');
     }
+    return this.jobRepository.remove(id);
+  }
 }

@@ -197,7 +197,7 @@ export class AuthService {
     const user = await this.usersService.create({
       ...dto,
       email: dto.email,
-      role: {
+      role: dto.role || {
         id: RoleEnum.user,
       },
       status: {
