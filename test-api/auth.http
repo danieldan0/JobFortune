@@ -1,10 +1,6 @@
-### Змінні
 @baseUrl = http://localhost:3000/api/v1
 
-### 1. Перевірка API
-GET {{baseUrl}}/
-
-### 2. Реєстрація admin
+### Register admin
 POST {{baseUrl}}/auth/email/register
 Content-Type: application/json
 
@@ -15,7 +11,7 @@ Content-Type: application/json
   "lastName": "User"
 }
 
-### 3. Логін admin
+### Login admin
 # @name adminLogin
 POST {{baseUrl}}/auth/email/login
 Content-Type: application/json
@@ -25,13 +21,13 @@ Content-Type: application/json
   "password": "secret"
 }
 
-### 4. Отримати токен
+### Get token
 @adminToken = {{adminLogin.response.body.token}}
 
-### 5. Отримати інформацію про себе
+### Get information about yourself
 GET {{baseUrl}}/auth/me
 Authorization: Bearer {{adminToken}}
 
-### 6. Отримати всіх користувачів
+### Get all users
 GET {{baseUrl}}/users?page=1&limit=10
 Authorization: Bearer {{adminToken}}

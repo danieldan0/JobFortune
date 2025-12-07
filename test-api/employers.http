@@ -1,9 +1,8 @@
-### Змінні
 @baseUrl = http://localhost:3000/api/v1
 @email = employer@example.com
 @password = secret123
 
-### 1. Реєстрація роботодавця
+### Register employer
 POST {{baseUrl}}/auth/email/register
 Content-Type: application/json
 
@@ -14,7 +13,7 @@ Content-Type: application/json
   "lastName": "Employer"
 }
 
-### 2. Логін роботодавця
+### Login employer
 # @name employerLogin
 POST {{baseUrl}}/auth/email/login
 Content-Type: application/json
@@ -24,15 +23,11 @@ Content-Type: application/json
   "password": "{{password}}"
 }
 
-### 3. Отримати токен з відповіді
+### Get token from response
 @employerToken = {{employerLogin.response.body.token}}
 @employerRefreshToken = {{employerLogin.response.body.refreshToken}}
 
-### 4. Оновити роль на employer (потрібен admin токен або через БД)
-# Це потрібно зробити через БД або admin panel
-# UPDATE "user" SET "roleId" = 3 WHERE email = 'employer@example.com';
-
-### 5. Створити профіль роботодавця
+### Create employer profile
 POST {{baseUrl}}/employers
 Content-Type: application/json
 Authorization: Bearer {{employerToken}}
@@ -44,11 +39,11 @@ Authorization: Bearer {{employerToken}}
   "location": "Kyiv, Ukraine"
 }
 
-### 6. Отримати свій профіль роботодавця
+### Get employer profile
 GET {{baseUrl}}/employers/my-profile
 Authorization: Bearer {{employerToken}}
 
-### 7. Оновити профіль роботодавця
+### Update employer profile
 PATCH {{baseUrl}}/employers/1
 Content-Type: application/json
 Authorization: Bearer {{employerToken}}
@@ -58,19 +53,19 @@ Authorization: Bearer {{employerToken}}
   "location": "Lviv, Ukraine"
 }
 
-### 8. Отримати всіх роботодавців (з пагінацією)
+### Get all employers
 GET {{baseUrl}}/employers?page=1&limit=10
 Authorization: Bearer {{employerToken}}
 
-### 9. Отримати конкретного роботодавця за ID
+### Get specific employer by ID
 GET {{baseUrl}}/employers/1
 Authorization: Bearer {{employerToken}}
 
-### 10. Видалити профіль роботодавця
+### Delete employer profile
 DELETE {{baseUrl}}/employers/1
 Authorization: Bearer {{employerToken}}
 
-### 11. Refresh токен
+### Refresh token
 POST {{baseUrl}}/auth/refresh
 Content-Type: application/json
 
@@ -78,6 +73,6 @@ Content-Type: application/json
   "refreshToken": "{{employerRefreshToken}}"
 }
 
-### 12. Logout
+### Logout
 POST {{baseUrl}}/auth/logout
 Authorization: Bearer {{employerToken}}
