@@ -1,44 +1,16 @@
 @baseUrl = http://localhost:3000/api/v1
-@employerToken = YOUR_EMPLOYER_JWT_TOKEN_HERE
+@employerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nywicm9sZSI6eyJpZCI6MiwibmFtZSI6IlVzZXIiLCJfX2VudGl0eSI6IlJvbGVFbnRpdHkifSwic2Vzc2lvbklkIjoyMSwiaWF0IjoxNzY1MTk4NTYyLCJleHAiOjE3NjUxOTk0NjJ9.s4KbCrOKFFDeITlUAo99J3W6ESuIpuR1EPcnk0T8pnc
 @jobId = 1
 
 ### Get all jobs
 GET {{baseUrl}}/jobs?page=1&limit=10
 Content-Type: application/json
 
-### Get all jobs with search filter
-GET {{baseUrl}}/jobs?search=developer&page=1&limit=10
-Content-Type: application/json
-
-### Get jobs by location
-GET {{baseUrl}}/jobs?location=Kyiv&page=1&limit=10
-Content-Type: application/json
-
-### Get jobs by employment type
-GET {{baseUrl}}/jobs?employmentType=full-time&page=1&limit=10
-Content-Type: application/json
-
-### Get jobs by work mode
-GET {{baseUrl}}/jobs?workMode=remote&page=1&limit=10
-Content-Type: application/json
-
 ### Get only active jobs
 GET {{baseUrl}}/jobs?isActive=true&page=1&limit=10
 Content-Type: application/json
 
-### Get jobs by employer ID
-GET {{baseUrl}}/jobs?employerId=1&page=1&limit=10
-Content-Type: application/json
-
-### Complex search: Remote full-time developer jobs in Kyiv
-GET {{baseUrl}}/jobs?search=developer&location=Kyiv&employmentType=full-time&workMode=remote&isActive=true&page=1&limit=10
-Content-Type: application/json
-
-### Get specific job by ID (public)
-GET {{baseUrl}}/jobs/{{jobId}}
-Content-Type: application/json
-
-### Create new job (employer only)
+### Create new job
 POST {{baseUrl}}/jobs
 Content-Type: application/json
 Authorization: Bearer {{employerToken}}

@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3000/api/v1
-@email = employer@example.com
-@password = secret123
+@email = employerHard@exm.com
+@password = 11111111
 
 ### Register employer
 POST {{baseUrl}}/auth/email/register
@@ -53,25 +53,9 @@ Authorization: Bearer {{employerToken}}
   "location": "Lviv, Ukraine"
 }
 
-### Get all employers
-GET {{baseUrl}}/employers?page=1&limit=10
-Authorization: Bearer {{employerToken}}
-
-### Get specific employer by ID
-GET {{baseUrl}}/employers/1
-Authorization: Bearer {{employerToken}}
-
 ### Delete employer profile
 DELETE {{baseUrl}}/employers/1
 Authorization: Bearer {{employerToken}}
-
-### Refresh token
-POST {{baseUrl}}/auth/refresh
-Content-Type: application/json
-
-{
-  "refreshToken": "{{employerRefreshToken}}"
-}
 
 ### Logout
 POST {{baseUrl}}/auth/logout

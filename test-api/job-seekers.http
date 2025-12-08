@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3000/api/v1
-@email = jobseeker@example.com
-@password = secret123
+@email = jobseeker@exm.com
+@password = 11111111
 
 ### Register job seeker
 POST {{baseUrl}}/auth/email/register
@@ -53,26 +53,6 @@ Authorization: Bearer {{jobSeekerToken}}
   "bio": "Updated bio: Experienced Full-Stack Developer",
   "yearsOfExperience": 6,
   "desiredPosition": "Lead Software Engineer"
-}
-
-### Get all job seekers (with pagination)
-GET {{baseUrl}}/job-seekers?page=1&limit=10
-Authorization: Bearer {{jobSeekerToken}}
-
-### Get specific job seeker by ID
-GET {{baseUrl}}/job-seekers/1
-Authorization: Bearer {{jobSeekerToken}}
-
-### Delete job seeker profile
-DELETE {{baseUrl}}/job-seekers/1
-Authorization: Bearer {{jobSeekerToken}}
-
-### Refresh token
-POST {{baseUrl}}/auth/refresh
-Content-Type: application/json
-
-{
-  "refreshToken": "{{jobSeekerRefreshToken}}"
 }
 
 ### 12. Logout
